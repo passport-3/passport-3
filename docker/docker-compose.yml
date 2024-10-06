@@ -1,0 +1,17 @@
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "16379:16379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - redis-network
+
+volumes:
+  redis-data:
+
+networks:
+  redis-network:

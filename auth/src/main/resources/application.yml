@@ -1,6 +1,10 @@
 spring:
   application:
     name: auth-service
+  data:
+    redis:
+      host: localhost
+      port: 16379
 
 eureka:
   client:
