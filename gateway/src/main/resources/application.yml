@@ -1,34 +1,34 @@
 server:
-  port: 19091  # ????? ???? ??? ?? ??
+  port: 19091
 
 spring:
   main:
-    web-application-type: reactive  # Spring ??????? ???? ? ???????? ???
+    web-application-type: reactive
   application:
-    name: gateway-service  # ?????? ??? 'gateway-service'? ??
+    name: gateway-service
   cloud:
     gateway:
-      routes: # Spring Cloud Gateway? ??? ??
-        - id: user-service  # ??? ???
-          uri: lb://user-service  # 'order-service'?? ???? ?? ???? ???? ???
+      routes:
+        - id: user-service
+          uri: lb://user-service
           predicates:
             - Path=/users/**
-        - id: admin-service  # ??? ???
+        - id: admin-service
           uri: lb://admin-service
           predicates:
             - Path=/admin/**
-        - id: auth-service  # ??? ???
+        - id: auth-service
           uri: lb://auth-service
           predicates:
             - Path=/auth/**
       discovery:
         locator:
-          enabled: true  # ??? ?????? ?? ???? ???? ????? ??
+          enabled: true
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:19090/eureka/  # Eureka ??? URL? ??
+      defaultZone: http://localhost:19090/eureka/
 service:
   jwt:
     access-expiration: 3600000

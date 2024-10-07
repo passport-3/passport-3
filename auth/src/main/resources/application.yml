@@ -5,11 +5,18 @@ spring:
     redis:
       host: localhost
       port: 16379
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/auth
+    username: subinny
+    password: mypassword
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:19090/eureka/
+
+
 
 service:
   jwt:
