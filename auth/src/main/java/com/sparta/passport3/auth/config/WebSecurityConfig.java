@@ -4,6 +4,7 @@ import com.sparta.passport3.auth.jwt.JwtAuthenticationFilter;
 import com.sparta.passport3.auth.jwt.JwtAuthorizationFilter;
 import com.sparta.passport3.auth.jwt.JwtTokenUtil;
 import com.sparta.passport3.auth.security.UserDetailsServiceImpl;
+import com.sparta.passport3.auth.service.RefreshTokenService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,8 +61,9 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-//                        .requestMatchers("/api/user/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
+//                              .requestMatchers("/api/user/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
                                 .requestMatchers(("/api/auth/**")).permitAll()
+                                .requestMatchers("/token/refresh").permitAll()
                                 .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 

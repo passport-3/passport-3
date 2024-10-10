@@ -3,7 +3,7 @@ package com.sparta.passport3.auth.security;
 
 
 import com.sparta.passport3.auth.model.User;
-import com.sparta.passport3.auth.model.UserRoleEnum;
+import com.sparta.passport3.auth.type.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

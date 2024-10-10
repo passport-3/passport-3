@@ -1,9 +1,8 @@
 package com.sparta.passport3.auth.model;
 
+import com.sparta.passport3.auth.type.UserRoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
