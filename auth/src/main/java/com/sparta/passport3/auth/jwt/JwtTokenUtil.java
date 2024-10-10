@@ -1,5 +1,6 @@
 package com.sparta.passport3.auth.jwt;
 
+
 import com.sparta.passport3.auth.type.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -45,7 +46,15 @@ public class JwtTokenUtil {
 //        key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 //    }
 
-    // 토큰 생성
+
+//     public String createToken(String username, String role, HttpServletRequest request) {
+//         Date date = new Date();
+
+//         // IP 주소와 디바이스 정보 가져오기
+//         String ipAddress = getIp(request);
+//         String deviceInfo = getDeviceInfo(request);
+
+
     public String createToken(String category, String username, UserRoleEnum role, Long expireTime) {
         return BEARER_PREFIX +
                 Jwts.builder()

@@ -7,9 +7,18 @@ spring:
       port: 6379
   datasource:
     driver-class-name: org.postgresql.Driver
+
     url: jdbc:postgresql://localhost:5432/passport3
     username: postgres
     password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 eureka:
   client:
@@ -25,3 +34,8 @@ service:
 
 server:
   port: 19092
+
+# 추가: user-service의 URL 설정
+user:
+  service:
+    url: http://localhost:19095  # user-service의 실제 URL을 입력

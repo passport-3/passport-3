@@ -1,6 +1,5 @@
-package com.sparta.passport3.auth.model;
+package com.sparta.passport3.user.model;
 
-import com.sparta.passport3.auth.type.UserRoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,5 +35,25 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
+
+    public static User create(String username, String email, String password, String phone, UserRoleEnum role) {
+        return User.builder()
+                .username(username)
+                .email(email)
+                .password(password)
+                .phone(phone)
+                .role(role)
+                .build();
+
+    }
+
+    // 생성자
+    public User(String username, String password, String email, String phone, UserRoleEnum role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.role = role;
+    }
 
 }
