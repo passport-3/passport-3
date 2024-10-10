@@ -1,8 +1,6 @@
 package com.sparta.passport3.auth.security;
 
-
-
-import com.sparta.passport3.auth.model.User;
+import com.sparta.passport3.auth.dto.UserResponseDto;
 import com.sparta.passport3.auth.model.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,13 +11,13 @@ import java.util.Collection;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private final User user;
+    private final UserResponseDto user;
 
-    public UserDetailsImpl(User user) {
+    public UserDetailsImpl(UserResponseDto user) {
         this.user = user;
     }
 
-    public User getUser() {
+    public UserResponseDto getUser() {
         return user;
     }
 
@@ -35,7 +33,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserRoleEnum role = user.getRole();
+        UserRoleEnum role = UserRoleEnum.valueOf(user.getRole());
         String authority = role.getAuthority();
 
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);

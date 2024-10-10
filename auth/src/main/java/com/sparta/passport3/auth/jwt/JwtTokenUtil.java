@@ -1,6 +1,5 @@
 package com.sparta.passport3.auth.jwt;
 
-import com.sparta.passport3.auth.model.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -47,7 +46,7 @@ public class JwtTokenUtil {
     }
 
     // 토큰 생성
-    public String createToken(String username, UserRoleEnum role, HttpServletRequest request) {
+    public String createToken(String username, String role, HttpServletRequest request) {
         Date date = new Date();
 
         // IP 주소와 디바이스 정보 가져오기
