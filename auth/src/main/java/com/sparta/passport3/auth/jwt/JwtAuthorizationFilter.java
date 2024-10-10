@@ -3,6 +3,7 @@ package com.sparta.passport3.auth.jwt;
 
 
 import com.sparta.passport3.auth.security.UserDetailsServiceImpl;
+import com.sparta.passport3.auth.type.Const;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -33,19 +34,33 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
 
-        String tokenValue = JwtTokenUtil.getTokenFromRequest(req);
+        String token = req.getHeader(Const.ACCESS_TOKEN);
 
-        if (StringUtils.hasText(tokenValue)) {
+        if(null == token) {
+            filterChain.doFilter(req, res);
+
+            return;
+        }
+
+        if (StringUtils.hasText(token)) {
             // JWT 토큰 substring
-            tokenValue = JwtTokenUtil.substringToken(tokenValue);
-            log.info(tokenValue);
+            token = JwtTokenUtil.substringToken(token);
+            log.info(token);
 
-            if (!JwtTokenUtil.validateToken(tokenValue)) {
+            // token 검증
+            if (!JwtTokenUtil.validateToken(token)) {
                 log.error("Token Error");
                 return;
             }
 
-            Claims info = JwtTokenUtil.getUserInfoFromToken(tokenValue);
+            // access token이 맞는지 확인
+            String category = JwtTokenUtil.getCategoryFromToken(token);
+            if(!category.equals(Const.ACCESS_TOKEN)) {
+                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
+            Claims info = JwtTokenUtil.getUserInfoFromToken(token);
 
             try {
                 setAuthentication(info.getSubject()); // user이름 넘겨줌

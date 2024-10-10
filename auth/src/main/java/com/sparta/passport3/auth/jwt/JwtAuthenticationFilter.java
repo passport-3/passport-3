@@ -1,8 +1,12 @@
 package com.sparta.passport3.auth.jwt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.passport3.auth.dto.LoginRequestDto;
-import com.sparta.passport3.auth.model.UserRoleEnum;
+import com.sparta.passport3.auth.model.RefreshToken;
+import com.sparta.passport3.auth.service.RefreshTokenService;
+import com.sparta.passport3.auth.type.UserRoleEnum;
 import com.sparta.passport3.auth.security.UserDetailsImpl;
+import com.sparta.passport3.auth.type.Const;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -12,16 +16,22 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.UUID;
 
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtTokenUtil JwtTokenUtil;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
     public JwtAuthenticationFilter(JwtTokenUtil JwtTokenUtil) {
         this.JwtTokenUtil = JwtTokenUtil;
@@ -53,8 +63,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
-        String token = JwtTokenUtil.createToken(username, role, request);
-        JwtTokenUtil.addJwtToCookie(token, response);
+
+        String accessToken = JwtTokenUtil.createToken(Const.ACCESS_TOKEN, username, role, Const.ACCESS_TOKEN_EXPIRES_IN); // 10분
+        String refreshToken = JwtTokenUtil.createToken(Const.REFRESH_TOKEN, username, role, Const.REFRESH_TOKEN_EXPIRES_IN); // 24시간
+
+        // access token -> header
+        response.setHeader(Const.ACCESS_TOKEN, accessToken);
+        // refresh token -> cookie
+        JwtTokenUtil.addJwtToCookie(refreshToken, response);
+        saveRefreshToken(username, refreshToken, Const.REFRESH_TOKEN_EXPIRES_IN);
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override
@@ -62,4 +80,26 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("로그인 실패");
         response.setStatus(401);
     }
+
+    // refresh token 저장
+    private void saveRefreshToken(String username, String refreshToken, Long expireTime) throws JsonProcessingException {
+        RefreshToken tokenData = RefreshToken.RefreshTokenBuilder()
+                .username(username)
+                .token(refreshToken)
+                .expireTime(System.currentTimeMillis() + expireTime)
+                .build();
+        String key = this.generateKey(username);
+
+        try {
+            refreshTokenService.saveTokenData(key, tokenData);
+        } catch(Exception e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    private String generateKey(String username) {
+        String tokenId = UUID.randomUUID().toString(); // 고유한 토큰 ID 생성
+        return String.format("user:%s:token:%s", username, tokenId);
+    }
+
 }
