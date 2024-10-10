@@ -1,5 +1,6 @@
 package com.sparta.passport3.auth.model;
 
+import com.sparta.passport3.auth.type.UserRoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
 

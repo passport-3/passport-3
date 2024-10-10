@@ -4,12 +4,13 @@ spring:
   data:
     redis:
       host: localhost
-      port: 16379
+      port: 6379
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/auth
-    username: subinny
-    password: mypassword
+
+    url: jdbc:postgresql://localhost:5432/passport3
+    username: postgres
+    password: postgres
 
   jpa:
     hibernate:
