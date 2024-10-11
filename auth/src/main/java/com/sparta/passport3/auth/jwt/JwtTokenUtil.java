@@ -40,22 +40,17 @@ public class JwtTokenUtil {
 
     // 로그 설정
     public static final Logger logger = LoggerFactory.getLogger("JWT TokenUtil 관련 로그");
-//
-//    @PostConstruct
-//    public void init() {
-//        key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-//    }
+
+    @PostConstruct
+    public void init() {
+        key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    }
 
 
-//     public String createToken(String username, String role, HttpServletRequest request) {
-//         Date date = new Date();
-
-//         // IP 주소와 디바이스 정보 가져오기
-//         String ipAddress = getIp(request);
-//         String deviceInfo = getDeviceInfo(request);
 
 
-    public String createToken(String category, String username, UserRoleEnum role, Long expireTime) {
+
+    public String createToken(String category, String username, String role, Long expireTime) {
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(username)               // 사용자 식별자값(ID)
@@ -67,35 +62,35 @@ public class JwtTokenUtil {
                         .compact();
     }
 
-    // IP 주소 가져오기
-    public String getIp(HttpServletRequest request) {
-        // HTTP 요청 헤더 "X-Forwarded-For"에서 IP 주소를 먼저 가져옴
-        String ip = request.getHeader("X-Forwarded-For");
-
-        // 만약 "X-Forwarded-For" 헤더가 null이거나 비어있거나 "unknown"일 경우, 다른 헤더에서 IP를 가져옴
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-
-        // 여전히 IP가 없으면 "WL-Proxy-Client-IP" 헤더에서 가져옴
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-
-        // 그래도 IP를 찾지 못하면, 기본적으로 request 객체에서 원격 IP를 가져옴 (보통 클라이언트의 실제 IP)
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-
-        // 최종적으로 찾은 IP 주소 반환
-        return ip;
-    }
-
-    // 클라이언트 디바이스 정보를 가져오는 메서드 (보통 브라우저 정보)
-    public String getDeviceInfo(HttpServletRequest request) {
-        // HTTP 요청 헤더 "User-Agent"에서 클라이언트 디바이스 정보(브라우저, OS 등)를 가져옴
-        return request.getHeader("User-Agent");
-    }
+//    // IP 주소 가져오기
+//    public String getIp(HttpServletRequest request) {
+//        // HTTP 요청 헤더 "X-Forwarded-For"에서 IP 주소를 먼저 가져옴
+//        String ip = request.getHeader("X-Forwarded-For");
+//
+//        // 만약 "X-Forwarded-For" 헤더가 null이거나 비어있거나 "unknown"일 경우, 다른 헤더에서 IP를 가져옴
+//        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+//            ip = request.getHeader("Proxy-Client-IP");
+//        }
+//
+//        // 여전히 IP가 없으면 "WL-Proxy-Client-IP" 헤더에서 가져옴
+//        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+//            ip = request.getHeader("WL-Proxy-Client-IP");
+//        }
+//
+//        // 그래도 IP를 찾지 못하면, 기본적으로 request 객체에서 원격 IP를 가져옴 (보통 클라이언트의 실제 IP)
+//        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+//            ip = request.getRemoteAddr();
+//        }
+//
+//        // 최종적으로 찾은 IP 주소 반환
+//        return ip;
+//    }
+//
+//    // 클라이언트 디바이스 정보를 가져오는 메서드 (보통 브라우저 정보)
+//    public String getDeviceInfo(HttpServletRequest request) {
+//        // HTTP 요청 헤더 "User-Agent"에서 클라이언트 디바이스 정보(브라우저, OS 등)를 가져옴
+//        return request.getHeader("User-Agent");
+//    }
 
 
     // 생성된 JWT를 Cookie에 저장

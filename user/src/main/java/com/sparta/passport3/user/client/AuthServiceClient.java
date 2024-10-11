@@ -13,6 +13,4 @@ public interface AuthServiceClient {
     @PostMapping("/api/auth/login")
     ResponseEntity<TokenResponseDto> login(@RequestBody UserInfoDto userInfoDto);
 
-    @PostMapping("/api/auth/encodePassword")
-    ResponseEntity<String> encodePassword(@RequestBody String password);
 }

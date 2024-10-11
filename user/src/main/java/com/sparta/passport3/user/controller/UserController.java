@@ -1,9 +1,6 @@
 package com.sparta.passport3.user.controller;
 
-import com.sparta.passport3.user.dto.LoginRequestDto;
-import com.sparta.passport3.user.dto.SignUpRequestDto;
-import com.sparta.passport3.user.dto.UserInfoDto;
-import com.sparta.passport3.user.dto.UserResponseDto;
+import com.sparta.passport3.user.dto.*;
 import com.sparta.passport3.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,40 +17,22 @@ public class UserController {
 
     private final UserService userService;
 
-    // 사용자 정보 가져오기
-    @GetMapping("/{username}")
-    public ResponseEntity<UserResponseDto> getUserByUsername(@PathVariable String username) {
-        UserResponseDto userResponse = userService.findByUsername(username);
-        return ResponseEntity.ok(userResponse);
+    // 클라이언트로부터의 로그인 요청을 받음
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequestDto loginRequestDto) {
+
+        // UserService에서 사용자 정보 생성 후 Auth 서비스에 전달
+        String message = userService.login(loginRequestDto.getUsername(), loginRequestDto.getPassword());
+        // 성공 메시지 반환
+        return ResponseEntity.ok(message);
     }
 
-//    // login
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody LoginRequestDto loginRequest) {
-//        String token = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
-//        return ResponseEntity.ok(token);
-//    }
-
-    // 회원가입
+    // 회원가입 엔드포인트
     @PostMapping("/signUp")
-    public ResponseEntity<String> signup(
-            @RequestBody @Valid SignUpRequestDto requestDto,
-            BindingResult bindingResult
-    ) {
-        if(bindingResult.hasErrors()) {
-            String message=bindingResult.getFieldError().getDefaultMessage();
-            log.error(message);
-            ResponseEntity.ok(message);
-
-        }
-        userService.signUp(requestDto);
-        return ResponseEntity.ok("signUp successfully");
+    public ResponseEntity<String> signUp(@RequestBody SignUpRequestDto signupRequestDto) {
+        userService.signUp(signupRequestDto);  // 회원가입 서비스 호출
+        return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
 
-    // 사용자 정보 조회 (UserInfoDto 반환)
-    @GetMapping("/{username}/info")
-    public ResponseEntity<UserInfoDto> getUserInfoByUsername(@PathVariable String username) {
-        UserInfoDto userInfoDto = userService.getUserInfoByUsername(username);
-        return ResponseEntity.ok(userInfoDto);
-    }
+
 }

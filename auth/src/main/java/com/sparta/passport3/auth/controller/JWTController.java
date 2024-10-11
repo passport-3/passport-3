@@ -51,7 +51,7 @@ public class JWTController {
         UserRoleEnum role = jwtTokenUtil.getRoleFromToken(refresh);
 
         // new access token
-        String newAccess = jwtTokenUtil.createToken(Const.ACCESS_TOKEN, username, role, Const.ACCESS_TOKEN_EXPIRES_IN);
+        String newAccess = jwtTokenUtil.createToken(Const.ACCESS_TOKEN, username, String.valueOf(role), Const.ACCESS_TOKEN_EXPIRES_IN);
 
         response.setHeader(Const.ACCESS_TOKEN, newAccess);
 
