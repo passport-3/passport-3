@@ -47,13 +47,5 @@ public class User {
 
     }
 
-    // 생성자
-    public User(String username, String password, String email, String phone, UserRoleEnum role) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.phone = phone;
-        this.role = role;
-    }
 
 }
